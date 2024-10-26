@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Route;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/wisata-kuliner', [ApiGuestController::class, 'fetchWisataKuliner']);
-Route::get('/kategori', [ApiGuestController::class, 'fetchKategori']);
+Route::middleware('auth:sanctum')->get('/kategori', [ApiGuestController::class, 'fetchKategori']);
 // tambahkan route baru
 // bikin kontroller baru diawali Apixxxxx
 
