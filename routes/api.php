@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Controllers\ApiGuestController;
+use App\Http\Controllers\ApiWisataKulinerController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\WisataKulinerController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -15,10 +18,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/register', [AuthController::class, 'fakereg']);
 Route::post('/register', [AuthController::class, 'register']);
-Route::get('/login', [AuthController::class, 'fakelog']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::get('/wisata-kuliner', [ApiGuestController::class, 'fetchWisataKuliner']);
+Route::get('/kategori', [ApiGuestController::class, 'fetchKategori']);
+// tambahkan route baru
+// bikin kontroller baru diawali Apixxxxx
+
 Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
 
 

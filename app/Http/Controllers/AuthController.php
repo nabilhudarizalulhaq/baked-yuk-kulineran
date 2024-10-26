@@ -20,40 +20,53 @@ class AuthController extends Controller
     }
     public function register(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8',
-        ]);
+        try {
+            $validatedData = $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|string|email|max:255|unique:users',
+                'password' => 'required|string|min:8',
+            ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+            $user = User::create([
+                'name' => $validatedData['name'],
+                'email' => $validatedData['email'],
+                'password' => Hash::make($validatedData['password']),
+                'role' => 'user'
+            ]);
 
-        return response()->json(['message' => 'User registered successfully']);
+            return response()->json(['message' => 'User registered successfully'], 201);
+        } catch (ValidationException $e) { // Menangkap kesalahan validasi
+            return response()->json(['error' => 'Validation failed', 'messages' => $e->validator->errors()], 422);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Something went wrong. Please try again later.', 'message' => $e], 500);
+        }
     }
 
     // Login
     public function login(Request $request)
     {
-        $request->validate([
-            'email' => 'required|string|email',
-            'password' => 'required|string',
-        ]);
-
-        $user = User::where('email', $request->email)->first();
-
-        if (! $user || ! Hash::check($request->password, $user->password)) {
-            throw ValidationException::withMessages([
-                'email' => ['The provided credentials are incorrect.'],
+        try {
+            $validatedData = $request->validate([
+                'email' => 'required|string|email',
+                'password' => 'required|string',
             ]);
+
+            $user = User::where('email', $validatedData['email'])->first();
+
+            if (! $user || ! Hash::check($validatedData['password'], $user->password)) {
+                throw ValidationException::withMessages([
+                    'email' => ['The provided credentials are incorrect.'],
+                ]);
+            }
+
+            $token = $user->createToken('mobile-app-token')->plainTextToken;
+
+            return response()->json(['token' => $token, 'user' => $user], 200);
+        } catch (ValidationException $e) {
+            return response()->json(['error' => 'Validation failed', 'messages' => $e->validator->errors()], 422);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Something went wrong. Please try again later.', 'message' => $e], 500);
         }
-
-        $token = $user->createToken('mobile-app-token')->plainTextToken;
-
-        return response()->json(['token' => $token, 'user' => $user]);
     }
 
     // Logout
