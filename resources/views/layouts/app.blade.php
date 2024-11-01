@@ -218,7 +218,7 @@
   </div>
   <!-- /.content-wrapper -->
   <footer class="main-footer">
-    &copy; Copyright <strong><span class="text-primary">PT Instinc Technology Solution</span></strong>. All Rights Reserved
+    {{-- &copy; Copyright <strong><span class="text-primary">PT Instinc Technology Solution</span></strong>. All Rights Reserved --}}
   </footer>
 
   <!-- Control Sidebar -->

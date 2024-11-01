@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ApiFavoriteController;
 use App\Http\Controllers\ApiGuestController;
 use App\Http\Controllers\ApiWisataKulinerController;
 use App\Http\Controllers\AuthController;
@@ -22,6 +23,8 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/wisata-kuliner', [ApiGuestController::class, 'fetchWisataKuliner']);
 Route::middleware('auth:sanctum')->get('/kategori', [ApiGuestController::class, 'fetchKategori']);
+Route::middleware('auth:sanctum')->post('/favorite/{id_user}', [ApiFavoriteController::class, 'fetchFavorite']);
+Route::middleware('auth:sanctum')->post('/add-favorite', [ApiFavoriteController::class, 'addFavorite']);
 // tambahkan route baru
 // bikin kontroller baru diawali Apixxxxx
 

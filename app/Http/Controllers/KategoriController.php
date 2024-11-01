@@ -41,11 +41,11 @@ class KategoriController extends Controller
         if ($kategoris->count() > 0) {
             $output .= '<table class="table table-striped table-sm text-center align-middle" id="datatable">
             <thead>
-              <tr>
+            <tr>
                 <th>No.</th>
                 <th>Jenis Wisata Kuliner</th>
                 <th>Action</th>
-              </tr>
+            </tr>
             </thead>
             <tbody>';
             foreach ($kategoris as $kategori) {
