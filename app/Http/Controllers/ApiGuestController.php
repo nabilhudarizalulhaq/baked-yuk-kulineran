@@ -15,18 +15,6 @@ class ApiGuestController extends Controller
             // Initialize a counter variable for numbering
             $i = 1;
 
-            // Fetch data based on the user's role
-            // if (auth()->user()->role == "admin") {
-            //     $wisata_kuliners = WisataKuliner::join('users', 'wisata_kuliners.id_user', '=', 'users.id')
-            //         ->select('wisata_kuliners.*', 'users.name')
-            //         ->get();
-            // } else {
-            //     $wisata_kuliners = WisataKuliner::join('users', 'wisata_kuliners.id_user', '=', 'users.id')
-            //         ->select('wisata_kuliners.*', 'users.name')
-            //         ->where('wisata_kuliners.id_user', auth()->user()->id)
-            //         ->get();
-            // }
-
             $wisata_kuliners = WisataKuliner::join('users', 'wisata_kuliners.id_user', '=', 'users.id')
                 ->select('wisata_kuliners.*', 'users.name')
                 ->get();

@@ -11,7 +11,7 @@
             <i class="bi-plus-circle me-2"></i>Tambah Menu Baru
         </button>
     </div>
-    
+
       <div class="card-body" id="show_all">
         <h1 class="text-center text-secondary my-5">Loading...</h1>
       </div>
@@ -46,19 +46,31 @@
             <label for="deskripsi">Deskripsi</label>
             <input type="text" name="deskripsi" class="form-control" placeholder="Deskripsi" required>
           </div>
-          <?php if (Auth::user()->role == "admin") : ?>
-          <div class="my-2">
-            <label for="id_wisata_kuliner">Wisata Kuliner</label>
-            <select name="id_wisata_kuliner" class="form-control" required>
+
+          <!-- Cek jika Auth::user() ada dan periksa role user -->
+          @if (Auth::check() && Auth::user()->role == "admin")
+            <div class="my-2">
+              <label for="id_wisata_kuliner">Wisata Kuliner</label>
+              <select name="id_wisata_kuliner" class="form-control" required>
                 <option value="" selected disabled>Pilih Wisata Kuliner</option>
-                @foreach($wisata_kuliners as $wisata_kuliner)
-                    <option value="{{ $wisata_kuliner->id }}">{{ $wisata_kuliner->nama_wisata_kuliner }}</option>
-                @endforeach
-            </select>
-          </div>
-          <?php elseif (Auth::user()->role == "owner") : ?>
-          <input type="hidden" name="id_wisata_kuliner" value="{{ $wisata_kuliners->id }}">
-          <?php endif; ?>
+                <!-- Pastikan $wisata_kuliners ada dan tidak kosong -->
+                @if (isset($wisata_kuliners) && $wisata_kuliners->isNotEmpty())
+                    @foreach($wisata_kuliners as $wisata_kuliner)
+                        <option value="{{ $wisata_kuliner->id }}">{{ $wisata_kuliner->nama_wisata_kuliner }}</option>
+                    @endforeach
+                @else
+                    <option value="" disabled>Wisata Kuliner tidak tersedia</option>
+                @endif
+              </select>
+            </div>
+          @elseif (Auth::check() && Auth::user()->role == "owner")
+            <!-- Untuk owner, pastikan $wisata_kuliners ada -->
+            @if (isset($wisata_kuliners))
+                <input type="hidden" name="id_wisata_kuliner" value="{{ $wisata_kuliners->id }}">
+            @else
+                <p>Data wisata kuliner tidak ditemukan.</p>
+            @endif
+          @endif
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
@@ -68,6 +80,7 @@
     </div>
   </div>
 </div>
+
 {{-- add new modal end --}}
 
 {{-- edit modal start --}}
@@ -89,7 +102,7 @@
                 <input type="file" name="foto_kuliner" class="form-control">
               </div>
               <div class="mt-2" id="foto_kuliner">
-                  
+
             </div>
             <div class="my-2">
               <label for="nama_kuliner">Nama Kuliner</label>

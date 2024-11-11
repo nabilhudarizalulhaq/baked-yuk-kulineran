@@ -21,18 +21,28 @@ class TransaksiController extends Controller
     public function index()
     {
         $user = Auth::user();
+
+        // Menginisialisasi variabel menus untuk digunakan di kedua kondisi
+        $menus = [];
+
         if ($user->role == 'admin') {
+            // Jika role adalah admin, ambil semua wisata kuliner dan menu
             $wisataKuliners = WisataKuliner::all();
             $menus = Menu::all();
         } else {
+            // Jika role bukan admin, ambil wisata kuliner milik pengguna
             $wisataKuliners = WisataKuliner::where('id_user', $user->id)->get();
 
-            // Fetch all menus for each wisata kuliner
-            foreach ($wisataKuliners as $wisataKuliner) {
-                $menus[$wisataKuliner->id] = Menu::where('id_wisata_kuliner', $wisataKuliner->id)->get();
+            // Cek jika wisata kuliner ditemukan
+            if ($wisataKuliners->isNotEmpty()) {
+                // Ambil menu untuk setiap wisata kuliner
+                foreach ($wisataKuliners as $wisataKuliner) {
+                    $menus[$wisataKuliner->id] = Menu::where('id_wisata_kuliner', $wisataKuliner->id)->get();
+                }
             }
         }
 
+        // Mengirimkan data ke view
         return view('transaksi', [
             'title' => 'Transaksi - Yuk Kulineran',
             'page' => 'Transaksi',
@@ -40,6 +50,7 @@ class TransaksiController extends Controller
             'wisataKuliners' => $wisataKuliners
         ]);
     }
+
 
     public function fetchAll()
     {
